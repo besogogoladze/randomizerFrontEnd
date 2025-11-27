@@ -1,0 +1,106 @@
+/* Background */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #4c6ef5, #7950f2);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container center */
+.container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+/* Card */
+.form-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.6s ease;
+}
+
+/* Title */
+.form-card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Label */
+label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+/* Input */
+input {
+  width: 100%;
+  max-width: 312px;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #4c6ef5;
+  outline: none;
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  font-size: 16px;
+  background: #4c6ef5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn:hover {
+  background: #3b5bdb;
+}
+
+/* Result Box */
+.result-box {
+  margin-top: 20px;
+  padding: 15px;
+  background: #e7f5ff;
+  border-left: 5px solid #4c6ef5;
+  border-radius: 6px;
+  min-height: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  display: none;
+}
+
+.error {
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

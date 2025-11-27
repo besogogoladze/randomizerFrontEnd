@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Random Picker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <form id="pickerForm" class="form-card">
+        <h2>რენდომაიზერი</h2>
+
+        <label for="username">შენი სახელი: </label>
+        <input
+          type="text"
+          id="username"
+          placeholder="შეიყვანე შენი სახელი"
+          autocomplete="on"
+        />
+        <button type="submit" class="btn">Submit</button>
+
+        <div id="result" class="result-box"></div>
+      </form>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
