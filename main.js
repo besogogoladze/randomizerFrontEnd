@@ -1,3 +1,5 @@
+const api = "https://randomizer-rose.vercel.app";
+
 document.getElementById("pickerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -11,7 +13,7 @@ document.getElementById("pickerForm").addEventListener("submit", async (e) => {
   }
 
   try {
-    const res = await fetch(`${process.env.API}/names/pick`, {
+    const res = await fetch(`${api}/names/pick`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
