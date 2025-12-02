@@ -80,8 +80,11 @@ verifySecretKeyForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
   const secretKey = document.getElementById("secretKey").value.trim();
+  const name = document.getElementById("username").value.trim().toLowerCase();
 
-  const match = listData.find((item) => item.secretKey === secretKey);
+  const match = listData.find(
+    (item) => item.name.toLowerCase() === name && item.secretKey === secretKey
+  );
 
   if (!match) {
     showError("კოდი არასწორია!");
