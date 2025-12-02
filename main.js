@@ -1,4 +1,4 @@
-const api = "https://randomizer-rose.vercel.app";
+const api = "http://localhost:5000";
 
 document.getElementById("pickerForm").addEventListener("submit", async (e) => {
   e.preventDefault();

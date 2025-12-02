@@ -9,9 +9,8 @@
 
   <body>
     <div class="container">
-      <form id="pickerForm" class="form-card">
+      <form id="verifyForm" class="form-card">
         <h2>რენდომაიზერი</h2>
-
         <label for="username">შენი სახელი: </label>
         <input
           type="text"
@@ -19,12 +18,27 @@
           placeholder="შეიყვანე შენი სახელი"
           autocomplete="on"
         />
+
         <button type="submit" class="btn">Submit</button>
 
         <div id="result" class="result-box"></div>
       </form>
+      <form id="verifySecretKeyForm" class="form-card">
+        <div id="secretKeyContainer">
+          <label class="secretKeyLabel" for="secretKey">
+            შეიყვანე კოდი:
+          </label>
+          <input
+            type="text"
+            id="secretKey"
+            placeholder="Enter your secret key"
+          />
+        </div>
+        <button type="submit" class="btn">Submit</button>
+        <div id="resultSecretKey" class="result-box"></div>
+      </form>
     </div>
 
-    <script src="main.js"></script>
+    <script src="main1.js"></script>
   </body>
 </html>
