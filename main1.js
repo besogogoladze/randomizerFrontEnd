@@ -3,7 +3,13 @@ const api = "https://randomizer-rose.vercel.app/names";
 const verifyForm = document.getElementById("verifyForm");
 const verifySecretKeyForm = document.getElementById("verifySecretKeyForm");
 
+const usernameInput = document.getElementById("username");
+const secretKeyInput = document.getElementById("secretKey");
+const resultBox = document.getElementById("result");
+const resultSecretKey = document.getElementById("resultSecretKey");
+
 let listData = [];
+let pendingName = null; // <- store the name that needs key verification
 
 async function fetchNames() {
   try {
@@ -17,14 +23,15 @@ async function fetchNames() {
 
 fetchNames();
 
-// ⭐ MAIN FORM — ENTER NAME
+// MAIN FORM — ENTER NAME
 verifyForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const name = document.getElementById("username").value.trim();
-  const secretKey = document.getElementById("secretKey").value.trim();
-  const resultBox = document.getElementById("result");
+  // Read current values
+  const name = usernameInput.value.trim();
+  const secretKey = secretKeyInput.value.trim();
 
+  // hide results
   resultBox.style.display = "none";
 
   if (!name) {
@@ -38,9 +45,22 @@ verifyForm.addEventListener("submit", async (e) => {
   );
 
   // If this user exists AND they have a secret key → show secret key form
+  // (only when no secretKey entered yet)
   if (found && found.secretKey && !secretKey) {
+    // set pendingName so verification is bound to this name
+    pendingName = found.name; // keep original casing from DB
+    // lock the username so it can't be changed while verifying
+    usernameInput.value = pendingName;
+    usernameInput.setAttribute("readonly", "readonly");
+
+    // show secret key form
     verifyForm.style.display = "none";
     verifySecretKeyForm.style.display = "block";
+
+    // clear any previous secret input or messages
+    secretKeyInput.value = "";
+    resultSecretKey.style.display = "none";
+
     return;
   }
 
@@ -67,42 +87,66 @@ verifyForm.addEventListener("submit", async (e) => {
       return;
     }
 
-    // SUCCESS
+    // SUCCESS — show result
     resultBox.style.display = "block";
-    resultBox.innerHTML = `${data.message} <br/> ${data.secretKey}`;
+    resultBox.innerHTML = `${data.message} <br/> ${data.secretKey || ""}`;
+
+    // cleanup: clear secret & pendingName, unlock username
+    pendingName = null;
+    secretKeyInput.value = "";
+    usernameInput.removeAttribute("readonly");
   } catch (err) {
     showError(`Error: ${err.message}`);
   }
 });
 
-// ⭐ SECRET KEY FORM — USER ENTERS CODE
+// SECRET KEY FORM — USER ENTERS CODE
 verifySecretKeyForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const secretKey = document.getElementById("secretKey").value.trim();
-  const name = document.getElementById("username").value.trim().toLowerCase();
+  const secretKey = secretKeyInput.value.trim();
 
+  // If for some reason pendingName is missing, block (safety)
+  if (!pendingName) {
+    showError("ასინქრონული შეცდომა — სცადეთ თავიდან");
+    // restore UI
+    verifySecretKeyForm.style.display = "none";
+    verifyForm.style.display = "block";
+    usernameInput.removeAttribute("readonly");
+    return;
+  }
+
+  // Match against the stored pendingName + secret key
   const match = listData.find(
-    (item) => item.name.toLowerCase() === name && item.secretKey === secretKey
+    (item) =>
+      item.name.toLowerCase() === pendingName.toLowerCase() &&
+      item.secretKey === secretKey
   );
 
   if (!match) {
+    // wrong code: clear secret input to avoid reuse
+    secretKeyInput.value = "";
     showError("კოდი არასწორია!");
     return;
   }
 
-  // Code is correct → return to main form
+  // success — we've verified the secret for pendingName
+  // prepare to re-submit to main handler but ensure the name and secretKey are set
+  // ensure username contains pendingName (readonly) and secretKey still present
+  usernameInput.value = pendingName;
+  usernameInput.setAttribute("readonly", "readonly");
+
+  // hide secret form, show main form
   verifySecretKeyForm.style.display = "none";
   verifyForm.style.display = "block";
 
+  // Dispatch submit programmatically, but to be safe, give the main handler the secretKey
+  // The main handler will send both name and secretKey to backend
   verifyForm.dispatchEvent(new Event("submit"));
 });
 
 // Helpers
 function showError(msg) {
-  const resultBox = document.getElementById("result");
-  const resultSecretKey = document.getElementById("resultSecretKey");
-
   resultBox.style.display = "block";
   resultBox.innerHTML = `<span class="error">${msg}</span>`;
 
